@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="id"><head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Qyaa</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;family=Montserrat:wght@700;800;900&amp;family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+    .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.12); }
+    .glass-strong { background: rgba(255,255,255,0.12); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.18); }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes pulse-glow { 0%,100%{box-shadow:0 0 20px rgba(236,72,153,0.3)} 50%{box-shadow:0 0 40px rgba(236,72,153,0.6)} }
+    @keyframes blob-move { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-20px) scale(1.1)} 66%{transform:translate(-20px,20px) scale(0.9)} }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-blob { animation: blob-move 8s ease-in-out infinite; }
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 60px rgba(236,72,153,0.2); }
+    .section-bg-1 { background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #0d0d0d 100%); }
+    .section-bg-2 { background: linear-gradient(180deg, #0d0d0d 0%, #2a0e3a 50%, #1a0a2e 100%); }
+    .section-bg-3 { background: linear-gradient(135deg, #2d1b4e 0%, #1a0a2e 50%, #0f0f0f 100%); }
+    .section-bg-4 { background: linear-gradient(180deg, #0f0f0f 0%, #3b0764 50%, #1a0a2e 100%); }
+    .section-bg-5 { background: linear-gradient(135deg, #1a0a2e 0%, #4a044e 50%, #0d0d0d 100%); }
+    .title-letter { display: inline-block; font-family: 'Montserrat', sans-serif; font-weight: 900; }
+    .heading-font { font-family: 'Montserrat', sans-serif; }
+
+    /* Premium dual-font heading */
+    .premium-heading { display: inline-block; line-height: 1.1; }
+    .premium-heading .script-letter {
+      font-family: 'Great Vibes', cursive;
+      font-weight: 400;
+      font-size: 1.6em;
+      margin-right: -0.08em;
+      display: inline-block;
+      vertical-align: baseline;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .premium-heading .bold-rest {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #ec4899, #a855f7); }
+    .timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: #ec4899; box-shadow: 0 0 12px #ec4899; position: absolute; left: 14px; top: 6px; transition: all 0.3s; }
+    .timeline-item:hover .timeline-dot { transform: scale(1.5); box-shadow: 0 0 24px #ec4899; }
+    .timeline-item .timeline-content { transition: all 0.3s ease; }
+    .timeline-item:hover .timeline-content { transform: translateX(8px); background: rgba(255,255,255,0.15); }
+    #loading-screen { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a0a2e, #0d0d0d); transition: opacity 0.8s ease; }
+    #loading-screen.hidden { opacity: 0; pointer-events: none; }
+    .sparkle-particle { position: absolute; width: 4px; height: 4px; background: #fbbf24; border-radius: 50%; animation: sparkle 3s ease-in-out infinite; pointer-events: none; }
+    @keyframes sparkle { 0%,100%{opacity:0;transform:scale(0)} 50%{opacity:1;transform:scale(1)} }
+    #back-to-top { position: fixed; bottom: 2rem; right: 2rem; z-index: 100; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    #back-to-top.show { opacity: 1; pointer-events: auto; }
+    .house-svg { filter: drop-shadow(0 20px 40px rgba(236,72,153,0.3)); }
+    .skill-card { cursor: pointer; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .skill-card:hover { transform: translateY(-4px); }
+    .skill-carousel { max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s; opacity: 0; }
+    .skill-carousel.open { max-height: 400px; opacity: 1; }
+    .carousel-inner { display: flex; transition: transform 0.4s ease; }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen text-white" style="background: linear-gradient(135deg, rgb(26, 10, 46) 0%, rgb(45, 27, 78) 40%, rgb(13, 13, 13) 100%);">
+  <div id="loading-screen">
+   <div class="text-center">
+    <div class="w-12 h-12 border-4 border-pink-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+    <p data-template-id="loading-text" class="canva-text text-pink-300 text-lg font-light tracking-widest" style="color: rgb(249, 168, 212); font-weight: 400; font-style: normal; font-size: 16px;">Memuat portofolio...</p>
+   </div>
+  </div>
+  <div id="sparkles" class="fixed inset-0 pointer-events-none z-10"></div><button id="back-to-top" class="w-12 h-12 rounded-full bg-pink-600/80 backdrop-blur flex items-center justify-center shadow-lg" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Kembali ke atas"><i data-lucide="chevron-up" style="width:20px;height:20px;color:white"></i></button> <!-- SECTION 1: HERO/PORTFOLIO -->
+  <section class="section-bg-2 relative px-4 py-20 flex items-center" style="min-height:calc(100 * min(var(--vh,1vh),1vh))">
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-10 right-20 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl animate-blob" style="animation-delay:2s"></div>
+   </div>
+   <div class="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+    <div class="reveal">
+     <div class="relative">
+      <span class="title-letter text-6xl md:text-8xl lg:text-9xl text-white" style="transform:rotate(-3deg)">P</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-pink-400" style="transform:rotate(2deg)">O</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-yellow-300" style="transform:rotate(-1deg)">R</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-white" style="transform:rotate(3deg)">T</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-pink-300" style="transform:rotate(-2deg)">O</span><br><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-white" style="transform:rotate(1deg)">F</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-purple-300" style="transform:rotate(-3deg)">O</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-pink-400" style="transform:rotate(2deg)">L</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-yellow-200" style="transform:rotate(-1deg)">I</span><span class="title-letter text-6xl md:text-8xl lg:text-9xl text-white" style="transform:rotate(2deg)">O</span><span class="text-sm md:text-base text-pink-300 ml-2 font-medium align-top">2026</span>
+     </div>
+     <p data-template-id="hero-subtitle" class="canva-text text-lg md:text-xl text-pink-200 mt-4 font-light" style="color: rgb(249, 168, 212); font-weight: 400; font-style: normal; font-size: 16px;">Rizqya Jaya Utama (Qyaa) — Digital Graphic Designer &amp; Developer</p>
+    </div>
+    <div class="animate-float reveal" style="animation-delay:0.3s">
+     <svg class="house-svg w-48 h-48 md:w-72 md:h-72" viewBox="0 0 200 200" fill="none">
+      <ellipse cx="100" cy="185" rx="70" ry="10" fill="rgba(0,0,0,0.3)"></ellipse><rect x="55" y="90" width="90" height="80" rx="8" fill="#FFF8E7"></rect><path d="M45 95 L100 50 L155 95" fill="#EC4899" stroke="#BE185D" stroke-width="2"></path><rect x="85" y="130" width="30" height="40" rx="4" fill="#92400E"></rect><circle cx="108" cy="152" r="3" fill="#FBBF24"></circle><rect x="62" y="105" width="20" height="18" rx="4" fill="#BFDBFE" stroke="#93C5FD" stroke-width="1"></rect><rect x="118" y="105" width="20" height="18" rx="4" fill="#BFDBFE" stroke="#93C5FD" stroke-width="1"></rect><ellipse cx="50" cy="172" rx="12" ry="10" fill="#4ADE80"></ellipse><ellipse cx="150" cy="172" rx="12" ry="10" fill="#4ADE80"></ellipse><ellipse cx="38" cy="175" rx="8" ry="7" fill="#22C55E"></ellipse><ellipse cx="162" cy="175" rx="8" ry="7" fill="#22C55E"></ellipse><circle cx="70" cy="165" r="5" fill="#FB923C"></circle><circle cx="130" cy="168" r="4" fill="#F472B6"></circle><circle cx="140" cy="163" r="3" fill="#FBBF24"></circle><path d="M135 50 L135 90" stroke="#9CA3AF" stroke-width="3"></path><rect x="135" y="45" width="18" height="12" rx="1" fill="#EC4899"></rect>
+     </svg>
+    </div>
+   </div>
+  </section><!-- SECTION 2: SELAMAT DATANG -->
+  <section class="section-bg-1 relative flex items-center justify-center px-4 py-20" style="min-height:calc(100 * min(var(--vh,1vh),1vh))">
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-20 left-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-blob"></div>
+    <div class="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/15 rounded-full blur-3xl animate-blob" style="animation-delay:3s"></div>
+   </div>
+   <div class="glass-strong rounded-3xl p-8 md:p-12 max-w-2xl w-full text-center relative z-10 reveal">
+    <h1 class="premium-heading text-3xl md:text-5xl text-white mb-4"><span data-template-id="welcome-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">S</span><span data-template-id="welcome-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">elamat Datang</span></h1>
+    <p data-template-id="welcome-subheading" class="canva-text text-pink-200 text-sm md:text-base mb-6 italic" style="color: rgb(249, 168, 212); font-weight: 400; font-style: italic; font-size: 16px;">"Kreativitas adalah kecerdasan yang sedang bersenang-senang."</p>
+    <div class="space-y-4 text-left">
+     <p data-template-id="welcome-para1" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Hai! Perkenalkan, saya Rizqya Jaya Utama, biasa dipanggil Qyaa. Seorang pelajar kreatif yang percaya bahwa desain memiliki kekuatan untuk mengubah dunia.</p>
+     <p data-template-id="welcome-para2" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Portofolio ini adalah ruang di mana saya menyimpan perjalanan kreatif saya — dari desain branding, UI/UX, web development, hingga digital marketing.</p>
+     <p data-template-id="welcome-para3" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Dengan pengalaman organisasi, kepemimpinan, dan entrepreneurship, saya terus berinovasi dalam menciptakan solusi digital yang kreatif dan berdampak.</p>
+     <p data-template-id="welcome-para4" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Silakan scroll ke bawah untuk mengenal saya lebih jauh. Selamat menikmati!</p>
+    </div>
+    <p data-template-id="welcome-bottom" class="canva-text text-pink-300 mt-8 font-medium" style="color: rgb(244, 114, 182); font-weight: 500; font-style: normal; font-size: 16px;">— Rizqya Jaya Utama (Qyaa)</p>
+    <div class="mt-6 animate-bounce text-pink-400"><i data-lucide="chevron-down" style="width:28px;height:28px;margin:0 auto"></i>
+    </div>
+   </div>
+  </section><!-- SECTION 3: TENTANG SAYA -->
+  <section class="section-bg-3 relative px-4 py-20">
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-40 left-1/4 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl animate-blob" style="animation-delay:4s"></div>
+   </div>
+   <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 relative z-10">
+    <div class="reveal flex flex-col items-center">
+     <h2 data-template-id="about-halo" class="canva-text heading-font text-5xl md:text-7xl font-black text-yellow-300 mb-6" style="color: rgb(253, 224, 71); font-weight: 900; font-style: normal; font-size: 36px;">BONJOUR!</h2>
+     <div class="relative">
+      <div class="w-48 h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden animate-pulse-glow border-4 border-pink-400/50 rotate-2">
+       <img data-template-id="profile-photo" class="canva-image w-full h-full object-cover" loading="lazy" src="https://images.pexels.com/photos/18848085/pexels-photo-18848085.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Studio portrait of a young woman against a dark background">
+      </div><span data-template-id="label-desainer" class="canva-tag absolute -top-3 -left-4 bg-pink-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg" style="background: rgb(236, 72, 153); color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Desainer</span> <span data-template-id="label-developer" class="canva-tag absolute top-1/2 -right-6 bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-lg" style="background: rgb(168, 85, 247); color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Developer</span> <span data-template-id="label-entrepreneur" class="canva-tag absolute -bottom-3 left-4 bg-yellow-500 text-gray-900 text-xs px-3 py-1 rounded-full font-medium shadow-lg" style="background: rgb(234, 179, 8); color: rgb(31, 41, 55); font-weight: 400; font-style: normal; font-size: 16px;">Entrepreneur</span>
+     </div>
+    </div>
+    <div class="reveal flex-1" style="animation-delay:0.2s">
+     <h3 data-template-id="about-name" class="canva-text text-2xl md:text-3xl font-bold text-white mb-2" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 22px;">Rizqya Jaya Utama</h3>
+     <p data-template-id="about-role" class="canva-text text-pink-300 text-sm mb-4 font-medium" style="color: rgb(244, 114, 182); font-weight: 500; font-style: normal; font-size: 16px;">Digital Graphic Designer - Developer - Entrepreneur</p>
+     <p data-template-id="about-desc1" class="canva-text text-white/80 text-sm leading-relaxed mb-3" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Siswi SMKN 7 Semarang jurusan PPLG dengan minat besar pada desain digital, UI/UX, web development, dan digital marketing. Berpengalaman dalam komunikasi, organisasi, serta manajemen bisnis digital.</p>
+     <p data-template-id="about-desc2" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Mandiri dalam mengelola layanan digital melalui strategi pemasaran kreatif dan pelayanan pelanggan yang responsif. Terus mengasah kemampuan untuk menghasilkan karya berkualitas tinggi yang berdampak.</p>
+    </div>
+   </div>
+  </section><!-- SECTION 4: KEAHLIAN -->
+  <section class="section-bg-5 relative px-4 py-20">
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-20 left-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl animate-blob" style="animation-delay:5s"></div>
+   </div>
+   <div class="max-w-5xl mx-auto relative z-10">
+    <h2 class="premium-heading text-3xl md:text-5xl text-center text-white mb-12 reveal"><span data-template-id="skills-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">K</span><span data-template-id="skills-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">eahlian Saya</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+     <div class="reveal">
+      <div class="skill-card glass-strong rounded-2xl p-6 flex items-center gap-4" onclick="toggleSkillCarousel('gd')">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0"><i data-lucide="palette" class="w-6 h-6 text-white"></i>
+       </div>
+       <h3 data-template-id="skill-gd-name" class="canva-text text-lg font-semibold text-white" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 19px;">Graphic Designer</h3><i data-lucide="chevron-down" class="w-5 h-5 text-pink-300 ml-auto transition-transform" id="icon-gd"></i>
+      </div>
+      <div class="skill-carousel mt-3 rounded-2xl overflow-hidden" id="carousel-gd">
+       <div class="relative h-56 md:h-64">
+        <div class="carousel-inner h-full" id="track-gd">
+         <div class="min-w-full h-full"><img data-template-id="skill-gd-img1" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of a notebook with wireframe sketches and a smartphone on a wooden desk">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-gd-img2" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/3964837/pexels-photo-3964837.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Colorful urban bulletin board with various artistic posters">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-gd-img3" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/5706015/pexels-photo-5706015.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of blank white business cards on a pastel orange background">
+         </div>
+        </div><button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('gd',-1)"><i data-lucide="chevron-left" class="w-4 h-4"></i></button> <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('gd',1)"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" id="dots-gd"></div>
+       </div>
+      </div>
+     </div>
+     <div class="reveal" style="animation-delay:0.1s">
+      <div class="skill-card glass-strong rounded-2xl p-6 flex items-center gap-4" onclick="toggleSkillCarousel('uiux')">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0"><i data-lucide="layout" class="w-6 h-6 text-white"></i>
+       </div>
+       <h3 data-template-id="skill-uiux-name" class="canva-text text-lg font-semibold text-white" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 19px;">UI UX Design</h3><i data-lucide="chevron-down" class="w-5 h-5 text-pink-300 ml-auto transition-transform" id="icon-uiux"></i>
+      </div>
+      <div class="skill-carousel mt-3 rounded-2xl overflow-hidden" id="carousel-uiux">
+       <div class="relative h-56 md:h-64">
+        <div class="carousel-inner h-full" id="track-uiux">
+         <div class="min-w-full h-full"><img data-template-id="skill-uiux-img1" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Notebook with wireframe sketches and smartphone on desk">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-uiux-img2" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Detailed close-up of a hand-drawn wireframe design on paper">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-uiux-img3" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/196646/pexels-photo-196646.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="A neat workspace featuring a sketchpad with wireframes and keyboard">
+         </div>
+        </div><button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('uiux',-1)"><i data-lucide="chevron-left" class="w-4 h-4"></i></button> <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('uiux',1)"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" id="dots-uiux"></div>
+       </div>
+      </div>
+     </div>
+     <div class="reveal" style="animation-delay:0.2s">
+      <div class="skill-card glass-strong rounded-2xl p-6 flex items-center gap-4" onclick="toggleSkillCarousel('webdev')">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center flex-shrink-0"><i data-lucide="code-2" class="w-6 h-6 text-white"></i>
+       </div>
+       <h3 data-template-id="skill-webdev-name" class="canva-text text-lg font-semibold text-white" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 19px;">Web Development</h3><i data-lucide="chevron-down" class="w-5 h-5 text-pink-300 ml-auto transition-transform" id="icon-webdev"></i>
+      </div>
+      <div class="skill-carousel mt-3 rounded-2xl overflow-hidden" id="carousel-webdev">
+       <div class="relative h-56 md:h-64">
+        <div class="carousel-inner h-full" id="track-webdev">
+         <div class="min-w-full h-full"><img data-template-id="skill-webdev-img1" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/6424583/pexels-photo-6424583.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of colorful programming code on a computer monitor">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-webdev-img2" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/6424588/pexels-photo-6424588.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Laptop displaying code in a dark setting">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-webdev-img3" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/7325498/pexels-photo-7325498.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of colorful programming code on a blurred computer monitor">
+         </div>
+        </div><button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('webdev',-1)"><i data-lucide="chevron-left" class="w-4 h-4"></i></button> <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('webdev',1)"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" id="dots-webdev"></div>
+       </div>
+      </div>
+     </div>
+     <div class="reveal" style="animation-delay:0.3s">
+      <div class="skill-card glass-strong rounded-2xl p-6 flex items-center gap-4" onclick="toggleSkillCarousel('dm')">
+       <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center flex-shrink-0"><i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+       </div>
+       <h3 data-template-id="skill-dm-name" class="canva-text text-lg font-semibold text-white" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 19px;">Digital Marketing</h3><i data-lucide="chevron-down" class="w-5 h-5 text-pink-300 ml-auto transition-transform" id="icon-dm"></i>
+      </div>
+      <div class="skill-carousel mt-3 rounded-2xl overflow-hidden" id="carousel-dm">
+       <div class="relative h-56 md:h-64">
+        <div class="carousel-inner h-full" id="track-dm">
+         <div class="min-w-full h-full"><img data-template-id="skill-dm-img1" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Laptop displaying analytics dashboard">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-dm-img2" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/97080/pexels-photo-97080.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Abstract visualization of data analytics with graphs and charts">
+         </div>
+         <div class="min-w-full h-full"><img data-template-id="skill-dm-img3" class="canva-image w-full h-full object-cover rounded-xl" loading="lazy" src="https://images.pexels.com/photos/106344/pexels-photo-106344.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Tablet displaying analytics charts on a wooden office desk">
+         </div>
+        </div><button type="button" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('dm',-1)"><i data-lucide="chevron-left" class="w-4 h-4"></i></button> <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white" onclick="event.stopPropagation();slideCarousel('dm',1)"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" id="dots-dm"></div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <p data-template-id="skills-hint" class="canva-text text-center text-gray-400 text-sm mt-8 reveal" style="color: rgb(156, 163, 175); font-weight: 400; font-style: italic; font-size: 16px;">Klik untuk melihat karya</p>
+   </div>
+  </section><!-- SECTION 5: PENDIDIKAN -->
+  <section class="section-bg-2 relative px-4 py-20">
+   <div class="max-w-3xl mx-auto relative z-10">
+    <h2 class="premium-heading text-3xl md:text-5xl text-center text-white mb-12 reveal"><span data-template-id="education-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">P</span><span data-template-id="education-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">endidikan</span></h2>
+    <div class="relative flex flex-col gap-6 px-4 md:px-0">
+     <div class="absolute left-1/2 md:left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-500 via-purple-500 to-cyan-500 -translate-x-1/2 md:translate-x-0"></div>
+     <div class="reveal relative md:ml-24 md:pl-6">
+      <div class="absolute -left-4 md:-left-7 top-4 w-6 h-6 rounded-full bg-pink-500 shadow-lg shadow-pink-500/50 border-4 border-pink-900 flex items-center justify-center flex-shrink-0 cursor-pointer" onclick="toggleEduAddress('edu-1')" style="transition:all 0.3s"><i data-lucide="book" style="width:12px;height:12px;color:#ffffff"></i>
+      </div>
+      <div class="glass-strong rounded-2xl p-6 timeline-content cursor-pointer" onclick="toggleEduAddress('edu-1')" style="transition:all 0.3s">
+       <p data-template-id="edu-1-title" class="canva-text text-white font-semibold mb-2" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">TK PGRI 44 Semarang</p>
+       <p data-template-id="edu-1-year" class="canva-text text-pink-300 text-xs" style="color: rgb(244, 114, 182); font-weight: 400; font-style: normal; font-size: 16px;">2014 - 2016</p>
+       <div id="edu-1-address" class="max-h-0 overflow-hidden transition-all duration-300">
+        <p data-template-id="edu-1-address" class="canva-text text-white/70 text-xs mt-3 pt-3 border-t border-white/20" style="color: rgba(255, 255, 255, 0.7); font-weight: 400; font-style: normal; font-size: 13px;">Jl. Kedungmundu No.115, Tandang, Kec. Tembalang</p>
+       </div>
+      </div>
+     </div>
+     <div class="reveal relative md:ml-24 md:pl-6" style="animation-delay:0.1s">
+      <div class="absolute -left-4 md:-left-7 top-4 w-6 h-6 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50 border-4 border-purple-900 flex items-center justify-center flex-shrink-0 cursor-pointer" onclick="toggleEduAddress('edu-2')" style="transition:all 0.3s"><i data-lucide="grad-cap" style="width:12px;height:12px;color:#ffffff"></i>
+      </div>
+      <div class="glass-strong rounded-2xl p-6 timeline-content cursor-pointer" onclick="toggleEduAddress('edu-2')" style="transition:all 0.3s">
+       <p data-template-id="edu-2-title" class="canva-text text-white font-semibold mb-2" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">SD Negeri Tandang 01</p>
+       <p data-template-id="edu-2-year" class="canva-text text-pink-300 text-xs" style="color: rgb(244, 114, 182); font-weight: 400; font-style: normal; font-size: 16px;">2016 - 2022</p>
+       <div id="edu-2-address" class="max-h-0 overflow-hidden transition-all duration-300">
+        <p data-template-id="edu-2-address" class="canva-text text-white/70 text-xs mt-3 pt-3 border-t border-white/20" style="color: rgba(255, 255, 255, 0.7); font-weight: 400; font-style: normal; font-size: 13px;">Jl. Kedungmundu No.115, Tandang, Kec. Tembalang</p>
+       </div>
+      </div>
+     </div>
+     <div class="reveal relative md:ml-24 md:pl-6" style="animation-delay:0.2s">
+      <div class="absolute -left-4 md:-left-7 top-4 w-6 h-6 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50 border-4 border-yellow-900 flex items-center justify-center flex-shrink-0 cursor-pointer" onclick="toggleEduAddress('edu-3')" style="transition:all 0.3s"><i data-lucide="building" style="width:12px;height:12px;color:#1f2937"></i>
+      </div>
+      <div class="glass-strong rounded-2xl p-6 timeline-content cursor-pointer" onclick="toggleEduAddress('edu-3')" style="transition:all 0.3s">
+       <p data-template-id="edu-3-title" class="canva-text text-white font-semibold mb-2" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">SMP Negeri 9 Semarang</p>
+       <p data-template-id="edu-3-year" class="canva-text text-pink-300 text-xs" style="color: rgb(244, 114, 182); font-weight: 400; font-style: normal; font-size: 16px;">2022 - 2025</p>
+       <div id="edu-3-address" class="max-h-0 overflow-hidden transition-all duration-300">
+        <p data-template-id="edu-3-address" class="canva-text text-white/70 text-xs mt-3 pt-3 border-t border-white/20" style="color: rgba(255, 255, 255, 0.7); font-weight: 400; font-style: normal; font-size: 13px;">Jl. Sendang Utara No.2, Gemah, Kec. Pedurungan</p>
+       </div>
+      </div>
+     </div>
+     <div class="reveal relative md:ml-24 md:pl-6" style="animation-delay:0.3s">
+      <div class="absolute -left-4 md:-left-7 top-4 w-6 h-6 rounded-full bg-cyan-500 shadow-lg shadow-cyan-500/50 border-4 border-cyan-900 flex items-center justify-center flex-shrink-0 cursor-pointer" onclick="toggleEduAddress('edu-4')" style="transition:all 0.3s"><i data-lucide="school" style="width:12px;height:12px;color:#ffffff"></i>
+      </div>
+      <div class="glass-strong rounded-2xl p-6 timeline-content cursor-pointer" onclick="toggleEduAddress('edu-4')" style="transition:all 0.3s">
+       <p data-template-id="edu-4-title" class="canva-text text-white font-semibold mb-2" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">SMK Negeri 7 Semarang</p>
+       <p data-template-id="edu-4-year" class="canva-text text-pink-300 text-xs" style="color: rgb(244, 114, 182); font-weight: 400; font-style: normal; font-size: 16px;">2025 - Sekarang</p>
+       <p data-template-id="edu-4-detail" class="canva-text text-white/60 text-xs mt-2" style="color: rgba(255, 255, 255, 0.6); font-weight: 400; font-style: normal; font-size: 16px;">Program Kejuruan Sistem Informasi Jaringan (SIJA)</p>
+       <div id="edu-4-address" class="max-h-0 overflow-hidden transition-all duration-300">
+        <p data-template-id="edu-4-address" class="canva-text text-white/70 text-xs mt-3 pt-3 border-t border-white/20" style="color: rgba(255, 255, 255, 0.7); font-weight: 400; font-style: normal; font-size: 13px;">Jl. Simpang Lima No. 1, Mugassari, Kec. Semarang Selatan</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- SECTION 6: KONTAK -->
+  <section class="section-bg-4 relative px-4 py-20">
+   <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute bottom-10 right-10 w-60 h-60 bg-pink-500/15 rounded-full blur-3xl animate-blob" style="animation-delay:1s"></div>
+   </div>
+   <div class="max-w-4xl mx-auto relative z-10">
+    <h2 class="premium-heading text-3xl md:text-5xl text-center text-white mb-10 reveal"><span data-template-id="contact-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">H</span><span data-template-id="contact-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">ubungi Saya</span></h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+     <a href="tel:+6285600862181" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-pink-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="phone" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-phone" class="canva-text text-white font-medium text-sm mb-2" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">+62 856-0086-2181</p><p class="text-pink-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Tap to call</p></a> <a href="mailto:rizqyajaya2009@gmail.com" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden" style="animation-delay:0.1s">
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="mail" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-email" class="canva-text text-white font-medium text-sm mb-2 break-all" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">rizqyajaya2009@gmail.com</p><p class="text-purple-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Send email</p></a> <a href="#" onclick="event.preventDefault()" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden" style="animation-delay:0.2s">
+      <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="map-pin" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-location" class="canva-text text-white font-medium text-sm mb-2" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">Semarang, Indonesia</p><p class="text-cyan-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Based here</p></a> <a href="https://s.id/rizqyajayautama" target="_blank" rel="noopener noreferrer" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden" style="animation-delay:0.3s">
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="globe" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-web" class="canva-text text-white font-medium text-sm mb-2" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">s.id/rizqyajayautama</p><p class="text-blue-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Visit site</p></a> <a href="https://instagram.com/_qieayy" target="_blank" rel="noopener noreferrer" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden" style="animation-delay:0.4s">
+      <div class="absolute inset-0 bg-gradient-to-br from-pink-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="instagram" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-ig" class="canva-text text-white font-medium text-sm mb-2" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">@_qieayy</p><p class="text-pink-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Follow me</p></a> <a href="https://instagram.com/kiyeastore" target="_blank" rel="noopener noreferrer" class="canva-card glass-strong rounded-2xl p-6 text-center card-hover reveal group relative overflow-hidden" style="animation-delay:0.5s">
+      <div class="absolute inset-0 bg-gradient-to-br from-pink-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><i data-lucide="instagram" style="width:32px;height:32px;color:#f472b6;margin:0 auto 12px"></i> <p data-template-id="contact-kiyea" class="canva-text text-white font-medium text-sm mb-2" style="color: rgba(255, 255, 255, 0.9); font-weight: 400; font-style: normal; font-size: 16px;">@kiyeastore</p><p class="text-pink-300 text-xs opacity-0 group-hover:opacity-100 transition-opacity">Store IG</p></a>
+    </div>
+   </div>
+  </section><!-- SECTION 7: PENGALAMAN -->
+  <section class="section-bg-3 relative px-4 py-20">
+   <div class="max-w-4xl mx-auto relative z-10">
+    <h2 class="premium-heading text-3xl md:text-5xl text-center text-white mb-10 reveal"><span data-template-id="experience-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">P</span><span data-template-id="experience-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">engalaman</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+     <div data-template-id="exp-1-card" class="canva-card glass-strong rounded-3xl p-8 card-hover reveal group relative overflow-hidden border border-pink-500/20" style="background: rgba(255, 255, 255, 0.12);">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-pink-600/15 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative z-10">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center mb-4 text-white text-lg font-bold">
+        1
+       </div>
+       <h4 data-template-id="exp-1-title" class="canva-text text-white font-bold text-lg mb-3" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Humas PMR Wira SMKN 7 Semarang</h4>
+       <p data-template-id="exp-1-desc" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Mengelola jalur komunikasi dan informasi organisasi sebagai Humas PMR Wira.</p>
+      </div>
+     </div>
+     <div data-template-id="exp-2-card" class="canva-card glass-strong rounded-3xl p-8 card-hover reveal group relative overflow-hidden border border-purple-500/20" style="animation-delay: 0.1s; background: rgba(255, 255, 255, 0.12);">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-600/15 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative z-10">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4 text-white text-lg font-bold">
+        2
+       </div>
+       <h4 data-template-id="exp-2-title" class="canva-text text-white font-bold text-lg mb-3" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Ketua Panitia Pelantikan PMR Madya</h4>
+       <p data-template-id="exp-2-desc" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Memimpin perencanaan hingga eksekusi acara pelantikan PMR Madya tahun 2024.</p>
+      </div>
+     </div>
+     <div data-template-id="exp-3-card" class="canva-card glass-strong rounded-3xl p-8 card-hover reveal group relative overflow-hidden border border-yellow-500/20" style="animation-delay: 0.2s; background: rgba(255, 255, 255, 0.12);">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-yellow-600/15 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative z-10">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center mb-4 text-gray-900 text-lg font-bold">
+        3
+       </div>
+       <h4 data-template-id="exp-3-title" class="canva-text text-white font-bold text-lg mb-3" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Digital Entrepreneur — Kiyea's Store</h4>
+       <p data-template-id="exp-3-desc" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Mengelola bisnis layanan aplikasi premium dan jasa desain digital di Kiyea's Store.</p>
+      </div>
+     </div>
+     <div data-template-id="exp-4-card" class="canva-card glass-strong rounded-3xl p-8 card-hover reveal group relative overflow-hidden border border-cyan-500/20" style="animation-delay: 0.3s; background: rgba(255, 255, 255, 0.12);">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-600/15 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+      <div class="relative z-10">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center mb-4 text-white text-lg font-bold">
+        4
+       </div>
+       <h4 data-template-id="exp-4-title" class="canva-text text-white font-bold text-lg mb-3" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Wakil Ketua PMR Madya SMPN 9</h4>
+       <p data-template-id="exp-4-desc" class="canva-text text-white/80 text-sm leading-relaxed" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Mengkoordinasi anggota dan program kerja organisasi tahun 2023-2024.</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- SECTION 8: SERTIFIKASI -->
+  <section class="section-bg-4 relative px-4 py-20">
+   <div class="max-w-4xl mx-auto relative z-10">
+    <h2 class="premium-heading text-3xl md:text-5xl text-center text-white mb-10 reveal"><span data-template-id="cert-heading-script" class="canva-text script-letter" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 56px;">S</span><span data-template-id="cert-heading-rest" class="canva-text bold-rest" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 36px;">ertifikasi &amp; Prestasi</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+     <div class="reveal">
+      <h3 data-template-id="cert-sub-heading" class="canva-text text-lg font-semibold text-pink-300 mb-4 flex items-center gap-2" style="color: rgb(244, 114, 182); font-weight: 600; font-style: normal; font-size: 19px;">Sertifikasi</h3>
+      <ul class="space-y-3">
+       <li data-template-id="cert-1" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-pink-500 hover:border-pink-400 hover:bg-pink-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">IT Essentials — Cisco Networking Academy</li>
+       <li data-template-id="cert-2" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-purple-500 hover:border-purple-400 hover:bg-purple-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Computer Hardware Basics — Cisco Academy</li>
+       <li data-template-id="cert-3" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-blue-500 hover:border-blue-400 hover:bg-blue-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Cloud Computing Fundamentals — Microsoft Learn</li>
+       <li data-template-id="cert-4" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-cyan-500 hover:border-cyan-400 hover:bg-cyan-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">AI and Generative Agent Concept — Microsoft Learn</li>
+       <li data-template-id="cert-5" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-emerald-500 hover:border-emerald-400 hover:bg-emerald-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Cloud Computing Fundamentals — Microsoft Learn</li>
+       <li data-template-id="cert-6" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-yellow-500 hover:border-yellow-400 hover:bg-yellow-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Azure &amp; AI Concept — Microsoft Learn</li>
+       <li data-template-id="cert-7" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-orange-500 hover:border-orange-400 hover:bg-orange-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">Sertifikat Workshop S.id — SMKN 7 Semarang</li>
+       <li data-template-id="cert-8" class="canva-text glass-strong rounded-lg p-4 text-white/90 text-sm font-medium border-l-4 border-red-500 hover:border-red-400 hover:bg-red-500/10 transition-all" style="color: rgba(255, 255, 255, 0.8); font-weight: 400; font-style: normal; font-size: 16px;">50+ Certificate Microsoft Learn</li>
+      </ul>
+     </div>
+     <div class="reveal" style="animation-delay:0.2s">
+      <h3 data-template-id="achievement-sub-heading" class="canva-text text-lg font-semibold text-yellow-300 mb-4 flex items-center gap-2" style="color: rgb(253, 224, 71); font-weight: 600; font-style: normal; font-size: 19px;">Prestasi</h3>
+      <div data-template-id="achievement-1-card" class="canva-card glass-strong rounded-3xl p-8 card-hover group relative overflow-hidden border-2 border-yellow-500/30" style="background: rgba(255, 255, 255, 0.12);">
+       <div class="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-bl from-yellow-600/20 to-transparent rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+       <div class="relative z-10">
+        <div class="text-5xl mb-4">
+         🏆
+        </div>
+        <p data-template-id="achievement-1" class="canva-text text-white text-lg font-bold leading-relaxed" style="color: rgb(255, 255, 255); font-weight: 500; font-style: normal; font-size: 16px;">Juara 2 Olimpiade IPS Tingkat Nasional — Pythagoras Olympiad</p>
+        <p class="text-yellow-300 text-sm mt-4 opacity-0 group-hover:opacity-100 transition-opacity">Juara 2 Nasional</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- FOOTER -->
+  <footer class="section-bg-1 px-4 py-12 text-center">
+   <p data-template-id="footer-text" class="canva-text text-white/60 text-sm" style="color: rgba(255, 255, 255, 0.6); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 Rizqya Jaya Utama. All rights reserved.</p>
+   <p data-template-id="footer-credit" class="canva-text text-pink-300/60 text-xs mt-2" style="color: rgba(244, 114, 182, 0.6); font-weight: 400; font-style: normal; font-size: 16px;">Dibuat dengan dedikasi dan kreativitas tanpa batas.</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => { document.getElementById('loading-screen').classList.add('hidden'); }, 1500);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('back-to-top').classList.toggle('show', window.scrollY > 400);
+    });
+
+    (function() {
+      const c = document.getElementById('sparkles');
+      for (let i = 0; i < 18; i++) {
+        const s = document.createElement('div');
+        s.className = 'sparkle-particle';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.animationDelay = Math.random() * 4 + 's';
+        s.style.animationDuration = (2 + Math.random() * 3) + 's';
+        c.appendChild(s);
+      }
+    })();
+
+    const carouselState = { gd: 0, uiux: 0, webdev: 0, dm: 0 };
+
+    function toggleSkillCarousel(id) {
+      const el = document.getElementById('carousel-' + id);
+      const icon = document.getElementById('icon-' + id);
+      el.classList.toggle('open');
+      if (icon) icon.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : '';
+      if (el.classList.contains('open')) renderDots(id);
+    }
+
+    function slideCarousel(id, dir) {
+      carouselState[id] = (carouselState[id] + dir + 3) % 3;
+      document.getElementById('track-' + id).style.transform = 'translateX(-' + (carouselState[id] * 100) + '%)';
+      renderDots(id);
+    }
+
+    function renderDots(id) {
+      const container = document.getElementById('dots-' + id);
+      container.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const d = document.createElement('div');
+        d.className = 'w-2 h-2 rounded-full ' + (i === carouselState[id] ? 'bg-pink-400' : 'bg-white/40');
+        container.appendChild(d);
+      }
+    }
+
+    function toggleEduAddress(id) {
+      const addressDiv = document.getElementById(id + '-address');
+      if (addressDiv.classList.contains('open')) {
+        addressDiv.classList.remove('open');
+        addressDiv.style.maxHeight = '0px';
+      } else {
+        addressDiv.classList.add('open');
+        addressDiv.style.maxHeight = addressDiv.scrollHeight + 'px';
+      }
+    }
+
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a12bd71915e9fe17',t:'MTc4MjY0MDc4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
